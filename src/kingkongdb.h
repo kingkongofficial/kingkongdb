@@ -1,3 +1,14 @@
+/**
+ * @file kingkongdb.h
+ * @author Krisna Pranav
+ * @brief KingKong DB
+ * @version 0.1
+ * @date 2023-05-04
+ * 
+ * @copyright Copyright (c) 2023 Krisna Pranav, KingKongDevelopers
+ * 
+ */
+
 #ifndef KINGKONGDB_H
 #define KINGKONGDB_H
 
