@@ -1,0 +1,11 @@
+[workspace]
+members = [
+    # need to add paths
+    "src/kingkongdb_core"
+]
+
+exclude = [
+    "build",
+    "obj",
+    "output"
+]
