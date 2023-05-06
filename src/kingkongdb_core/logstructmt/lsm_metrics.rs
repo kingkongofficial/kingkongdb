@@ -79,3 +79,38 @@ impl LsmMetrics {
     }
 
 }
+
+macro_rules! test_enable {
+    ($self:ident) => {
+        if !$self.enable.load(Ordering::Relaxed) {
+            return;
+        }
+    }
+}
+
+struct LsmMetricsInner {
+    enable: AtomicBool,
+    sync_count: AtomicUsize,
+    minor_compact: AtomicUsize,
+    major_compact: AtomicUsize,
+    free_segments_count: AtomicUsize,
+    use_free_segment_count: AtomicUsize,
+    clone_snapshot_count: AtomicUsize,
+}
+
+impl LsmMetricsInner {
+    #[inline]
+    fn enable(&self) {
+        self.enable.store(true, Ordering::Relaxed);
+    }
+
+    fn add_sync_count(&self) {
+        test_enable!(self);
+        self.sync_count.fetch_add(1, Ordering::Relaxed);
+    }
+
+    fn add_minor_compact(&self) {
+        test_enable!(self);
+        self.major_compact.fetch_add(1, Ordering::Relaxed);
+    }
+}
