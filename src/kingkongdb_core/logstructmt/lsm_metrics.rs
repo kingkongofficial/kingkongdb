@@ -1,14 +1,3 @@
-/**
- * @file config.rs
- * @author Krisna Pranav
- * @brief Config
- * @version 0.1
- * @date 2023-05-06
- * 
- * @copyright Copyright (c) 2023 Krisna Pranav, KingKongDevelopers
- * 
- */
-
 use std::sync::Arc;
 use std::sync::atomic::{AtomicBool, AtomicUsize, Ordering};
 
@@ -99,6 +88,7 @@ struct LsmMetricsInner {
 }
 
 impl LsmMetricsInner {
+
     #[inline]
     fn enable(&self) {
         self.enable.store(true, Ordering::Relaxed);
@@ -111,6 +101,52 @@ impl LsmMetricsInner {
 
     fn add_minor_compact(&self) {
         test_enable!(self);
+        self.minor_compact.fetch_add(1, Ordering::Relaxed);
+    }
+
+    fn minor_compact(&self) -> usize {
+        self.minor_compact.load(Ordering::Relaxed)
+    }
+
+    fn add_major_compact(&self) {
+        test_enable!(self);
         self.major_compact.fetch_add(1, Ordering::Relaxed);
     }
+
+    fn major_compact(&self) -> usize {
+        self.major_compact.load(Ordering::Relaxed)
+    }
+
+    fn set_free_segments_count(&self, count: usize) {
+        self.free_segments_count.store(count, Ordering::Relaxed);
+    }
+
+    fn free_segments_count(&self) -> usize {
+        self.free_segments_count.load(Ordering::Relaxed)
+    }
+
+    fn add_use_free_segment_count(&self) {
+        self.use_free_segment_count.fetch_add(1, Ordering::Relaxed);
+    }
+
+    fn use_free_segment_count(&self) -> usize {
+        self.use_free_segment_count.load(Ordering::Relaxed)
+    }
+
+}
+
+impl Default for LsmMetricsInner {
+
+    fn default() -> Self {
+        LsmMetricsInner {
+            enable: AtomicBool::new(false),
+            sync_count: AtomicUsize::new(0),
+            minor_compact: AtomicUsize::new(0),
+            major_compact: AtomicUsize::new(0),
+            free_segments_count: AtomicUsize::new(0),
+            use_free_segment_count: AtomicUsize::new(0),
+            clone_snapshot_count: AtomicUsize::new(0),
+        }
+    }
+
 }
